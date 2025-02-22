@@ -1,14 +1,16 @@
 import Link from "next/link";
+import { resolve } from "styled-jsx/css";
 
 async function fetchGithubUsers() {
   const res = await fetch("https://api.github.com/search/users?q=greg");
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   const json = await res.json();
   return json.items;
 }
 
 const GitHubUsersPage = async () => {
   const users = await fetchGithubUsers();
-  console.log(users);
+  // console.log(users);
   return (
     <div className="overflow-x-auto">
       <table className="table">
