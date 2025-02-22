@@ -2,8 +2,12 @@ import Link from "next/link";
 import { resolve } from "styled-jsx/css";
 
 async function fetchGithubUsers() {
-  const res = await fetch("https://api.github.com/search/users?q=greg");
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  const res = await fetch("https://api.github.com/search/users?q=greg", {
+    next: {
+      revalidate: 60,
+    },
+  });
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   const json = await res.json();
   return json.items;
 }

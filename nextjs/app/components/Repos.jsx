@@ -1,5 +1,9 @@
 async function fetchRepos(user) {
-  const res = await fetch(`https://api.github.com/users/${user}/repos`);
+  const res = await fetch(`https://api.github.com/users/${user}/repos`, {
+    next: {
+      revalidate: 60,
+    },
+  });
   const json = await res.json();
   return json;
 }
@@ -20,7 +24,7 @@ const Repos = async ({ user }) => {
           </thead>
           <tbody>
             {repos.map((repo) => (
-              <tr key={user.id}>
+              <tr key={repo.id}>
                 <td>{repo.name}</td>
                 <td>{repo.description}</td>
               </tr>
