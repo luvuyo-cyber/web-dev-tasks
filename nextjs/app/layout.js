@@ -4,6 +4,7 @@ import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Metadata for the application
 export const metadata = {
   title: "Luvuyo's Portfolio of Small Bets",
   description: "Tech Courses and Books",
@@ -15,9 +16,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="navbar bg-base-100">
+        <div className="navbar bg-base-100 shadow-sm">
           <div className="flex-1">
-            <Link href="/" className="btn btn-ghost normal-case text-xl">
+            <Link href="/" className="btn btn-ghost text-xl normal-case">
               Luvuyo's Portfolio of Small Bets
             </Link>
           </div>
