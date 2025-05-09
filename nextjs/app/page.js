@@ -1,9 +1,10 @@
 import Link from "next/link";
+import Books from "./components/Books";
 
 const HomePage = () => {
   return (
     <div>
-      <h1>Home Page</h1>
+      {/* <h1>Home Page</h1>
       <button className="btn btn-primary">Button</button>
       <nav>
         <ul>
@@ -17,7 +18,8 @@ const HomePage = () => {
             <Link href="/about/contact">Contact</Link>
           </li>
         </ul>
-      </nav>
+      </nav> */}
+      <Books />
     </div>
   );
 };
