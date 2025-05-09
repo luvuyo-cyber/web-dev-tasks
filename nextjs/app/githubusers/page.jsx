@@ -5,6 +5,10 @@ import Link from "next/link";
 async function fetchGitHubUsers() {
   const res = await fetch("https://api.github.com/search/users?q=greg");
 
+  // This promise will resolve after 3000 milliseconds (3 seconds)
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
+  // Check if the request was successful
   if (!res.ok) {
     throw new Error("Failed to fetch GitHub users");
   }

@@ -7,6 +7,9 @@ async function fetchRepos(user) {
   // Construct the API URL using the provided username
   const res = await fetch(`https://api.github.com/users/${user}/repos`);
 
+  // This promise will resolve after 3000 milliseconds (3 seconds)
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
   // Check if the request was successful
   if (!res.ok) {
     throw new Error("Failed to fetch repositories");
