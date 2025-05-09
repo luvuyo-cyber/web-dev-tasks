@@ -5,10 +5,15 @@ import Link from "next/link";
 
 async function fetchRepos(user) {
   // Construct the API URL using the provided username
-  const res = await fetch(`https://api.github.com/users/${user}/repos`);
+  const res = await fetch(`https://api.github.com/users/${user}/repos`, {
+    // Added revalidate option to control caching
+    next: {
+      revalidate: 60,
+    },
+  });
 
   // This promise will resolve after 3000 milliseconds (3 seconds)
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
 
   // Check if the request was successful
   if (!res.ok) {

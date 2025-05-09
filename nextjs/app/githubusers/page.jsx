@@ -2,11 +2,18 @@
 import Link from "next/link";
 
 // Async function to fetch GitHub users (from Chapter 9)
+// Added revalidate option to control caching
 async function fetchGitHubUsers() {
-  const res = await fetch("https://api.github.com/search/users?q=greg");
+  const res = await fetch("https://api.github.com/search/users?q=greg", {
+    // Revalidate data at most every 60 seconds
+    next: {
+      //`next` is a special key used by Next.js for extended fetch options
+      revalidate: 60,
+    },
+  });
 
   // This promise will resolve after 3000 milliseconds (3 seconds)
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
 
   // Check if the request was successful
   if (!res.ok) {
