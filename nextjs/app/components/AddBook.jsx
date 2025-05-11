@@ -5,7 +5,9 @@
 import { useState } from "react";
 
 // Define the AddBook component
+// It receives an 'onBookAdded' function prop from its parent (Books component)
 const AddBook = ({ onBookAdded }) => {
+  // Receive onBookAdded prop
   // State to manage the visibility of the modal/form
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -31,16 +33,10 @@ const AddBook = ({ onBookAdded }) => {
 
   // Function to handle form submission
   const handleSubmitNewBook = async (e) => {
-    // Prevent the default form submission behavior (page reload)
+    // Marked as async
     e.preventDefault();
 
-    // Log the form data for testing
-    // console.log("Submitting new book:", {
-    //   title: newBookTitle,
-    //   link: newBookLink,
-    //   img: newBookImg,
-    // });
-
+    // Create the new book data object from the form state
     const newBookData = {
       title: newBookTitle,
       link: newBookLink,
@@ -49,7 +45,7 @@ const AddBook = ({ onBookAdded }) => {
 
     console.log("Submitting new book:", newBookData);
 
-    //Implement the POST request to the API here
+    // Implement the POST request to the API
     try {
       const res = await fetch("http://localhost:3000/api/books", {
         method: "POST", // Specify the HTTP method as POST
@@ -61,10 +57,9 @@ const AddBook = ({ onBookAdded }) => {
 
       // Check if the request was successful
       if (!res.ok) {
-        // Handle errors (e.g., show an error message to the user)
         console.error("Failed to add book:", res.statusText);
         alert("Failed to add book. Please try again.");
-        return; // Stop execution if the request failed
+        return;
       }
 
       // Parse the JSON response from the API (contains the added book data with ID)
@@ -73,19 +68,18 @@ const AddBook = ({ onBookAdded }) => {
 
       // Call the onBookAdded prop function, passing the new book data (including ID from API)
       if (onBookAdded) {
-        // Pass the book object returned by the API
-        onBookAdded(result.book);
+        onBookAdded(result.book); // Assuming the API returns { message: ..., book: { ... } }
       }
 
-      // Reset form fields after submission (or after successful API call)
+      // Close the modal after successful submission
+      setModalOpen(false);
+
+      // Reset form fields after successful submission
       setNewBookTitle("");
       setNewBookLink("");
       setNewBookImg("");
 
-      // Close the modal after submission (or after successful API call)
-      setModalOpen(false);
     } catch (error) {
-      // Handle network errors or other exceptions
       console.error("Error adding book:", error);
       alert("An error occurred while adding the book. Please try again.");
     }
@@ -93,13 +87,8 @@ const AddBook = ({ onBookAdded }) => {
 
   return (
     <div>
-      {/* Use onClick to manually control the modal state */}
-      <label
-        htmlFor="add_book_modal"
-        className="btn btn-primary w-full mb-4"
-        onClick={() => setModalOpen(true)}
-      >
-        {" "}
+      {/* Button to open the modal */}
+      <label htmlFor="add_book_modal" className="btn btn-primary w-full mb-4">
         Add New Book
       </label>
 
@@ -108,8 +97,10 @@ const AddBook = ({ onBookAdded }) => {
         type="checkbox"
         id="add_book_modal"
         className="modal-toggle"
+        // We control the checkbox state with our modalOpen state
         checked={modalOpen}
-        onChange={() => setModalOpen(!modalOpen)}
+        // This allows closing the modal by clicking outside, pressing Esc, or clicking the label button
+        onChange={() => setModalOpen(!modalOpen)} // Keep this to sync state with checkbox
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
@@ -170,7 +161,7 @@ const AddBook = ({ onBookAdded }) => {
               {/* Close button using the modal-toggle label */}
               <label htmlFor="add_book_modal" className="btn">
                 Cancel
-              </label>{" "}
+              </label>
             </div>
           </form>
         </div>
