@@ -21,27 +21,38 @@ export async function GET(req) {
 //Define an asynchronous function to handle POST requests to /api/books
 export async function POST(req) {
   // 1. Read the request body as JSON
-  // The request object has a .json() method to parse the body
+  // We expect title, link, and img from the frontend
   const { title, link, img } = await req.json();
 
-  // 2. Create a new book object
-  // For now, generate a simple ID based on the array length
-  const newBook = {
-    id: books.length + 1,
-    title,
-    link,
-    img,
-  };
+  // 2. Use Prisma Client to create a new book record in the database
+  try {
+    const newBook = await prisma.book.create({
+      data: {
+        // The 'data' object contains the fields to be inserted
+        title: title,
+        link: link,
+        img: img,
+        // Prisma will automatically generate the 'id', 'createdAt', and 'updatedAt'
+      },
+    });
 
-  // 3. Add the new book to the in-memory array
-  books.push(newBook);
+    console.log("POST book created:", newBook);
 
-  // 4. Return a success response
-  // NextResponse.json() can also send simple messages
-  return NextResponse.json(
-    { message: "Book added succesfully", book: newBook },
-    { status: 201 }
-  );
+    // 3. Return a success response with the created book data
+    return NextResponse.json(
+      { message: "Book added successfully", book: newBook },
+      { status: 201 }
+    );
+  } catch (error) {
+    // Handle potential errors during database insertion
+    console.error("Error creating book in Prisma:", error);
+
+    // Return an error response
+    return NextResponse.json(
+      { message: "Failed to add book", error: error.message },
+      { status: 500 }
+    );
+  }
 }
 
 //Define an asynchronous function to handle DELETE requests to /api/books ---
