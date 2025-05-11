@@ -1,11 +1,20 @@
 // Import the book data from the local JSON file
-import books from "./data.json";
+// import books from "./data.json";
+
+// Import the Prisma client instance
+import { prisma } from "../../db";
 
 // Import NextResponse from next/server to return JSON responses easily
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
-  // Return the 'books' array as a JSON response
+  // Use prisma.book.findMany() to retrieve all records from the 'Book' table
+  const books = await prisma.book.findMany();
+
+  // Keep the log for verification
+  console.log("GET books called");
+
+  // Return the retrieved books as a JSON response
   return NextResponse.json(books);
 }
 

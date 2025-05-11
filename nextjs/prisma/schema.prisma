@@ -1,0 +1,23 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+ // --- Start: Define the Book model ---
+    model Book {
+      id        String   @id @default(uuid()) // Unique identifier (UUID)
+      title     String   @unique // Book title, must be unique
+      link      String
+      img       String
+      createdAt DateTime @default(now()) // Timestamp for creation
+      updatedAt DateTime @updatedAt // Timestamp for last update
+    }
+  // --- End: Define the Book model ---
