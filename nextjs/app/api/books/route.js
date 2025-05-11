@@ -54,30 +54,3 @@ export async function POST(req) {
     );
   }
 }
-
-//Define an asynchronous function to handle DELETE requests to /api/books ---
-//This handler expects the book ID to be passed in the request body
-export async function DELETE(req) {
-  // 1. Read the request body to get the ID of the book to delete
-  const { id } = await req.json();
-
-  // 2. Find the index of the book with the given ID in the array
-  // Note: findIndex returns -1 if the element is not found
-  const index = books.findIndex((book) => book.id === id);
-
-  // 3. Check if the book was found
-  if (index === -1) {
-    // If the book was not found, return a 404 Not Found response
-    return NextResponse.json({ message: "Book not found" }, { status: 404 });
-  }
-
-  // 4. Remove the book from the array using splice
-  // splice(startIndex, deleteCount)
-  books.splice(index, 1);
-
-  // 5. Return a success response
-  return NextResponse.json(
-    { message: "Book deleted successfully", id: id },
-    { status: 200 }
-  );
-}

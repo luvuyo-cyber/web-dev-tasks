@@ -95,12 +95,8 @@ const Books = () => {
 
     // Make the DELETE request to the API
     try {
-      const res = await fetch("http://localhost:3000/api/books", {
+      const res = await fetch(`http://localhost:3000/api/books/${bookId}`, {
         method: "DELETE", // Specify the HTTP method as DELETE
-        headers: {
-          "Content-Type": "application/json", // Tell the server we are sending JSON
-        },
-        body: JSON.stringify({ id: bookId }), // Send the book ID in the request body as JSON
       });
 
       // Check if the request was successful
