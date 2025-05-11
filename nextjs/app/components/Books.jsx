@@ -27,7 +27,6 @@ async function getBooks() {
 
 // Define the Books component (Client Component)
 const Books = () => {
-  
   // State to hold the original list of all books
   const [allBooks, setAllBooks] = useState([]);
 
@@ -65,7 +64,6 @@ const Books = () => {
 
   // --- Start: Function to handle adding a new book (will be passed to AddBook) ---
   const handleBookAdded = async (newBook) => {
-    
     // Add the new book to the beginning of the allBooks and displayedBooks arrays
     setAllBooks((prevBooks) => [newBook, ...prevBooks]);
     setDisplayedBooks((prevBooks) => [newBook, ...prevBooks]);
@@ -85,12 +83,53 @@ const Books = () => {
       );
 
       setDisplayedBooks(filtered);
-
     } catch (error) {
       console.error("Error re-fetching books after adding:", error);
     }
   };
   // --- End: Function to handle adding a new book ---
+
+  // This function will be called when the delete button is clicked
+  const handleDeleteBook = async (bookId) => {
+    console.log("Attempting to delete book with ID:", bookId);
+
+    // Make the DELETE request to the API
+    try {
+      const res = await fetch("http://localhost:3000/api/books", {
+        method: "DELETE", // Specify the HTTP method as DELETE
+        headers: {
+          "Content-Type": "application/json", // Tell the server we are sending JSON
+        },
+        body: JSON.stringify({ id: bookId }), // Send the book ID in the request body as JSON
+      });
+
+      // Check if the request was successful
+      if (!res.ok) {
+        console.error("Failed to delete book:", res.statusText);
+        alert("Failed to delete book. Please try again");
+        return;
+      }
+
+      // Parse the JSON response
+      const result = await res.json();
+      console.log("Book deleted successfully:", result);
+
+      // --- Update state to remove the deleted book from the UI ---
+      // Filter the allBooks array to remove the book with the deleted ID
+      setAllBooks((prevBooks) =>
+        prevBooks.filter((book) => book.id !== bookId)
+      );
+
+      // Filter the displayedBooks array to remove the book with the deleted ID
+      setDisplayedBooks((prevBooks) =>
+        prevBooks.filter((book) => book.id !== bookId)
+      );
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error("Error deleting book:", error);
+      alert("An error occurred while deleting the book. Please try again.");
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -139,7 +178,13 @@ const Books = () => {
                   >
                     See in Amazon
                   </Link>
-                  <button className="btn btn-error btn-sm">Delete</button>
+                  {/* Add an onClick handler to call handleDeleteBook with the book's ID */}
+                  <button
+                    className="btn btn-error btn-sm"
+                    onClick={() => handleDeleteBook(book.id)}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

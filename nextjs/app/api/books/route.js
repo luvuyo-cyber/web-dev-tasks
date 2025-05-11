@@ -8,6 +8,7 @@ export async function GET(req) {
   // Return the 'books' array as a JSON response
   return NextResponse.json(books);
 }
+
 //Define an asynchronous function to handle POST requests to /api/books
 export async function POST(req) {
   // 1. Read the request body as JSON
@@ -24,8 +25,6 @@ export async function POST(req) {
   };
 
   // 3. Add the new book to the in-memory array
-  // Note: This only adds to the array in the current server process's memory.
-  // It will be lost when the server restarts or if multiple server instances are running.
   books.push(newBook);
 
   // 4. Return a success response
@@ -33,5 +32,32 @@ export async function POST(req) {
   return NextResponse.json(
     { message: "Book added succesfully", book: newBook },
     { status: 201 }
+  );
+}
+
+//Define an asynchronous function to handle DELETE requests to /api/books ---
+//This handler expects the book ID to be passed in the request body
+export async function DELETE(req) {
+  // 1. Read the request body to get the ID of the book to delete
+  const { id } = await req.json();
+
+  // 2. Find the index of the book with the given ID in the array
+  // Note: findIndex returns -1 if the element is not found
+  const index = books.findIndex((book) => book.id === id);
+
+  // 3. Check if the book was found
+  if (index === -1) {
+    // If the book was not found, return a 404 Not Found response
+    return NextResponse.json({ message: "Book not found" }, { status: 404 });
+  }
+
+  // 4. Remove the book from the array using splice
+  // splice(startIndex, deleteCount)
+  books.splice(index, 1);
+
+  // 5. Return a success response
+  return NextResponse.json(
+    { message: "Book deleted successfully", id: id },
+    { status: 200 }
   );
 }
