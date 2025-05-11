@@ -10,6 +10,9 @@ import { useState, useEffect } from "react";
 // Import the Search component
 import Search from "./Search";
 
+// Import the AddBook component
+import AddBook from "./AddBook";
+
 // Async function to fetch book data from our internal API
 // This function will now be called on the client inside useEffect
 async function getBooks() {
@@ -88,6 +91,32 @@ const Books = () => {
   };
   // --- End: Function to handle search filtering ---
 
+  // --- Start: Function to handle adding a new book (will be passed to AddBook) ---
+  const handleBookAdded = async (newBook) => {
+    // Add the new book to the beginning of the allBooks and displayedBooks arrays
+    setAllBooks((prevBooks) => [newBook, ...prevBooks]);
+    setDisplayedBooks((prevBooks) => [newBook, ...prevBooks]);
+
+    // Re-fetch the entire list from the API to ensure data is in sync
+    try {
+      const updatedBooks = await getBooks();
+      setAllBooks(updatedBooks);
+
+      // Re-apply the current search filter to the updated list
+      // This ensures the newly added book appears if it matches the current search query
+      const currentSearchQuery =
+        document.querySelector(".input-bordered")?.value || "";
+      const filtered = updatedBooks.filter((book) =>
+        book.title.toLowerCase().includes(currentSearchQuery.toLowerCase())
+      );
+
+      setDisplayedBooks(filtered);
+    } catch (error) {
+      console.error("Error re-fetching books after adding:", error);
+    }
+  };
+  // --- End: Function to handle adding a new book ---
+
   // Log the fetched books to the server console
   //   console.log("Fetched Books:", books);
 
@@ -96,6 +125,8 @@ const Books = () => {
       <h1 className="text-3xl font-bold mb-6 text-center">
         My Portfolio Books
       </h1>
+      {/* Pass the handleBookAdded function as a prop */}
+      <AddBook onBookAdded={handleBookAdded} />
 
       {/* --- Start: Render the Search component and pass the handleSearch function --- */}
       {/* Pass the handleSearch function as a prop to the Search component */}
