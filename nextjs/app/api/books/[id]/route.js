@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 // Import the book data from the local JSON file (for now, as per book before Prisma)
 // We will remove this import later when we switch to Prisma
-import books from "../data.json"; // Ensure this path is correct relative to [id]/route.js
+import books from "../data.json";
 
 // Define an asynchronous function to handle DELETE requests to /api/books/[id]
 // It receives the request object and the dynamic 'params' object from the URL
